@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/your-username/your-repo.git'
+                git credentialsId: 'Github', url: 'https://github.com/YuYong22/cloud-face-recognition_demo.git'
             }
         }
 
