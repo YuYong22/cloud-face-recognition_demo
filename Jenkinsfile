@@ -13,27 +13,24 @@ pipeline {
                 git credentialsId: 'Github', url: 'https://github.com/YuYong22/cloud-face-recognition_demo.git' // Clone the repository
             }
         }
-// Build the API Docker image
         stage('Build API Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE_API}:latest", './api/Dockerfile') // Build the API Docker image
+                    docker.build("${DOCKER_IMAGE_API}:latest", './api') // Thư mục chứa Dockerfile
                 }
             }
         }
-// Build the Database Docker image
         stage('Build Database Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE_DB}:latest", './database/Dockerfile') // Build the Database Docker image   
+                    docker.build("${DOCKER_IMAGE_DB}:latest", './database') // Thư mục chứa Dockerfile
                 }
             }
         }
-// Push the Docker images to Docker Hub
         stage('Push Docker Images') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', "${REGISTRY_CREDENTIALS}") { 
+                    docker.withRegistry('https://registry.hub.docker.com', "${REGISTRY_CREDENTIALS}") {
                         docker.image("${DOCKER_IMAGE_API}:latest").push() 
                         docker.image("${DOCKER_IMAGE_DB}:latest").push()
                     }
@@ -41,7 +38,6 @@ pipeline {
             }
         }
     }
-// Send an email notification if the build is successful or fails
     post {
         success {
             emailext (
